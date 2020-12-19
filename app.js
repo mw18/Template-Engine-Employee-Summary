@@ -13,7 +13,47 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 
 const employees = [{}, {}, {}]
+const html = render (employees);
 
+inquirer
+  .prompt([
+      // array of questions for manager
+    {
+        type: 'input',
+        name: 'name',
+        message: 'Name of employee: ',
+      },
+    {
+        type: 'input',
+        name: 'role',
+        message: 'Role of employee: ',
+    },
+    {
+        type: 'input',
+        name: 'ID',
+        message: 'ID of employee: ',
+    },
+    ])
+
+    .then((response) => {
+        console.log('response', response);
+        
+        const userInput = `
+      
+      # Title:  ${response.name}
+      
+      ## Description: 
+      ${response.id} 
+      
+      `;
+    
+        fs.writeFile('team.html', userInput, (err) => {
+            if (err) throw err;
+            console.log ('Team data is saved')
+    
+    });
+    
+    })
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -21,7 +61,7 @@ const employees = [{}, {}, {}]
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-const html = render (employees);
+
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. 
 
@@ -41,11 +81,11 @@ const html = render (employees);
 // for the provided `render` function to work! ```
 
 //Ask manager prompts => then you want to build team 
-Do you want to add a team memenr => no/render html 
-yes/ name id email 
-role / engineer 
-github => new Engineer 
-school => new Intern 
-Intern 
+// Do you want to add a team memenr => no/render html 
+// yes/ name id email 
+// role / engineer 
+// github => new Engineer 
+// school => new Intern 
+// Intern 
 
 
