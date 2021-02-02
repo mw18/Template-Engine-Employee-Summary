@@ -1,91 +1,164 @@
-const inquirer = require("inquirer");
-const path = require("path");
-const fs = require("fs");
-
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-
+const inquirer = require("inquirer");
+const path = require("path");
+const fs = require("fs");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const employees = [{}, {}, {}]
-const html = render (employees);
+const employees = [];
+const html = render(employees);
 
-inquirer
-  .prompt([
-      // array of questions for manager
-    {
-        type: 'input',
-        name: 'name',
-        message: 'Name of employee: ',
-      },
-    {
-        type: 'input',
-        name: 'role',
-        message: 'Role of employee: ',
-    },
-    {
-        type: 'input',
-        name: 'ID',
-        message: 'ID of employee: ',
-    },
-    ])
+console.log("Welcome to Teambuilder");
 
-    .then((response) => {
-        console.log('response', response);
-        
-        const userInput = `
-      
-      # Title:  ${response.name}
-      
-      ## Description: 
-      ${response.id} 
-      
-      `;
-    
-        fs.writeFile('team.html', userInput, (err) => {
-            if (err) throw err;
-            console.log ('Team data is saved')
-    
-    });
-    
-    })
+const initialize = [
+  {
+    type: 'confirm',
+    name: 'init',
+    message: 'Please confirm that you are a Manager and that you are ready to build your team'
+  },
+]
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+const manager = [
+  {
+    type: 'input',
+    name: 'name',
+    message: 'Please enter your name ',
+  },
+  {
+    type: 'input',
+    name: 'email',
+    message: 'Please enter your email address',
+  },
+  {
+    type: 'input',
+    name: 'ID',
+    message: 'Please enter your employee ID',
+  },
+  {
+    type: 'input',
+    name: 'officeNum',
+    message: 'Please enter your office number',
+  },
+];
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+const empType = [{
+  type: "list",
+  choices: ["intern", "engineer", "no more employees"],
+  name: "empType",
+  message: "Please select if you would like to add an intern, engineer, or if you are done adding team members at this time",
+},
+]
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. 
+const engineer = [{
+  type: 'input',
+  name: 'name',
+  message: 'Name of engineer: ',
+},
+{
+  type: 'input',
+  name: 'email',
+  message: 'Please enter the email of the engineer',
+},
+{
+  type: 'input',
+  name: 'ID',
+  message: 'Please enter the ID of employee: ',
+},
+{
+  type: 'input',
+  name: 'github',
+  message: 'Please enter the github user name of the engineer:',
+},
+];
 
-//Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
+const intern = [{
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
+  type: 'input',
+  name: 'name',
+  message: 'Please enter the name of the Intern: ',
+},
+{
+  type: 'input',
+  name: 'ID',
+  message: 'Please enter the ID of the Intern: ',
+},
+{
+  type: 'input',
+  name: 'email',
+  message: 'Please enter the email address of the Intern',
+},
+{
+  type: 'input',
+  name: 'school',
+  message: 'Please enter the school that the Intern attends ',
+},
+];
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+inquirer.prompt(initialize).then(response => {
+  if (response.init === true) {
+    initManager();
+  } else {
+    if (response.init === false)
+      console.log("Please come back later")
+  }
+});
 
-//Ask manager prompts => then you want to build team 
-// Do you want to add a team memenr => no/render html 
-// yes/ name id email 
-// role / engineer 
-// github => new Engineer 
-// school => new Intern 
-// Intern 
+const initManager = () => {
+  inquirer.prompt(manager).then(response => {
+    console.log(response);
+    employees.push(new Manager(response.name, response.id, response.email, response.officeNumber));
+    addEmployee();
+  });
+};
 
+const initEngineer = () => {
+  inquirer.prompt(engineer).then(response => {
+    console.log(response);
+    employees.push(new Engineer(response.name, response.id, response.email, response.github));
+    addEmployee();
+  });
+};
+
+// If you are an Intern
+const initIntern = () => {
+  inquirer.prompt(intern).then(response => {
+    console.log(response);
+    employees.push(new Intern(response.name, response.id, response.email, response.school));
+    addEmployee();
+  });
+};
+
+const addEmployee = () => {
+  inquirer.prompt(empType).then(response => {
+    switch (response.empType) {
+      case "engineer":
+        initEngineer();
+        break;
+      case "intern":
+        initIntern();
+        break;
+      case "no more employees":
+        render (employees);
+        console.log("Your Team has been built")
+        break;
+      default:
+        return;
+    }
+  });
+};
+
+
+// const createHtml = () => {
+//   console.log('this is new html');
+//   console.log(render(employees));
+//   render(employees);
+//   fs.writeFile('index.html', render(employees), function (err) {
+//     if (err) throw err;
+//   })
+// };
 
