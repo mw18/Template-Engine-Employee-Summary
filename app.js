@@ -108,23 +108,33 @@ inquirer.prompt(initialize).then(response => {
   }
 });
 
+// Manager
 const initManager = () => {
   inquirer.prompt(manager).then(response => {
     console.log(response);
-    employees.push(new Manager(response.name, response.id, response.email, response.officeNumber));
+    employees.push(new Manager(
+      response.name, 
+      response.id, 
+      response.email, 
+      response.officeNumber));
     addEmployee();
   });
 };
 
+// Engineer
 const initEngineer = () => {
   inquirer.prompt(engineer).then(response => {
     console.log(response);
-    employees.push(new Engineer(response.name, response.id, response.email, response.github));
+    employees.push(new Engineer(
+      response.name, 
+      response.id, 
+      response.email, 
+      response.github));
     addEmployee();
   });
 };
 
-// If you are an Intern
+// Intern
 const initIntern = () => {
   inquirer.prompt(intern).then(response => {
     console.log(response);
@@ -133,6 +143,21 @@ const initIntern = () => {
   });
 };
 
+// write file - it only writes file to terminal but does not output in a new file 
+const writeToFile = () => {
+  console.log(html)
+  fs.writeFile(outputPath, html, function(err) {
+     if(err) { 
+       console.log(err); 
+     }
+     else {
+       console.log("New team had been created. Success!");
+     }
+   })
+};
+
+
+// Add employee loop
 const addEmployee = () => {
   inquirer.prompt(empType).then(response => {
     switch (response.empType) {
@@ -143,7 +168,7 @@ const addEmployee = () => {
         initIntern();
         break;
       case "no more employees":
-        render (employees);
+        writeToFile();
         console.log("Your Team has been built")
         break;
       default:
@@ -151,14 +176,4 @@ const addEmployee = () => {
     }
   });
 };
-
-
-// const createHtml = () => {
-//   console.log('this is new html');
-//   console.log(render(employees));
-//   render(employees);
-//   fs.writeFile('index.html', render(employees), function (err) {
-//     if (err) throw err;
-//   })
-// };
 
