@@ -8,12 +8,14 @@ const fs = require("fs");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-const render = require("./lib/htmlRenderer");
 
+
+const render = require("./lib/htmlRenderer");
 const employees = [];
 const html = render(employees);
 
 console.log("Welcome to Teambuilder");
+
 
 const initialize = [
   {
@@ -36,12 +38,12 @@ const manager = [
   },
   {
     type: 'input',
-    name: 'ID',
+    name: 'id',
     message: 'Please enter your employee ID',
   },
   {
     type: 'input',
-    name: 'officeNum',
+    name: 'officeNumber',
     message: 'Please enter your office number',
   },
 ];
@@ -66,7 +68,7 @@ const engineer = [{
 },
 {
   type: 'input',
-  name: 'ID',
+  name: 'id',
   message: 'Please enter the ID of employee: ',
 },
 {
@@ -84,7 +86,7 @@ const intern = [{
 },
 {
   type: 'input',
-  name: 'ID',
+  name: 'id',
   message: 'Please enter the ID of the Intern: ',
 },
 {
@@ -138,15 +140,19 @@ const initEngineer = () => {
 const initIntern = () => {
   inquirer.prompt(intern).then(response => {
     console.log(response);
-    employees.push(new Intern(response.name, response.id, response.email, response.school));
+    employees.push(new Intern(
+      response.name, 
+      response.id, 
+      response.email, 
+      response.school));
     addEmployee();
   });
 };
 
 // write file - it only writes file to terminal but does not output in a new file 
 const writeToFile = () => {
-  console.log(html)
-  fs.writeFile(outputPath, html, function(err) {
+  console.log(render(employees))
+  fs.writeFile(outputPath, render(employees), function(err) {
      if(err) { 
        console.log(err); 
      }
