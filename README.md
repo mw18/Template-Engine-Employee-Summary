@@ -13,7 +13,6 @@
   * [Questions](#questions)
   
   ![Screen Shot 2021-02-02 at 3 22 17 PM](https://user-images.githubusercontent.com/67554339/106667305-60d03d80-656e-11eb-97da-7fd509711b1d.png)
-  file:///Users/melissaward/Downloads/Template-Engine.webm
   
   ## Installation
   Clone the repo to your local machine https://github.com/mw18/Template-Engine-Employee-Summary
